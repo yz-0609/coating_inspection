@@ -2,6 +2,7 @@
 
 uint16_t ResetReason_Decode(uint32_t raw_csr)
 {
+    /* RCC 复位标志可同时出现，协议按位保留所有原因，不强行选取单一原因。 */
     uint16_t reason = 0;
     if (raw_csr & (UINT32_C(1) << 27)) reason |= RESET_REASON_POWER_ON;
     if (raw_csr & (UINT32_C(1) << 26)) reason |= RESET_REASON_PIN;

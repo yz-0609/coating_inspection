@@ -1,4 +1,6 @@
 #include "protocol.h"
+/* 9 字命令布局：epoch[0..1]、token[2..3]、seq[4..5]、opcode[6]、arg[7..8]。
+ * 所有 32 位字段均先高 16 位再低 16 位，不依赖结构体内存布局。 */
 void Command_Decode(WorkCommand *c, const uint16_t w[COMMAND_REG_COUNT])
 {
     c->epoch=JoinWords(w[0],w[1]); c->token=JoinWords(w[2],w[3]);

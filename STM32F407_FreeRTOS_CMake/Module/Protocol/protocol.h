@@ -7,15 +7,18 @@
 #define FW_VERSION "1.0.0"
 #define PROTOCOL_VERSION UINT16_C(0x0200)
 #define MODBUS_SLAVE 1U
+/* FC04 状态快照为 22 字；FC10 命令为 9 字，静态命令队列最多容纳 8 条。 */
 #define INPUT_REG_COUNT 22U
 #define COMMAND_REG_COUNT 9U
 #define COMMAND_QUEUE_CAPACITY 8U
+/* 时间单位：心跳和按钮等待用毫秒，RTU 定界及接收监视用微秒。 */
 #define HOST_TIMEOUT_MS 1500U
 #define BUTTON_HOLD_MS 1200U
 #define RTU_MAX_ADU 256U
+/* 115200 波特率使用固定 t1.5/t3.5；8E1 每字符共 11 位。 */
 #define RTU_T15_US 750U
 #define RTU_T35_US 1750U
-#define RTU_CHAR_US 96U /* ceil(11 bits / 115200 baud) */
+#define RTU_CHAR_US 96U /* 11 位 / 115200 波特率，向上取整为微秒。 */
 #define RX_MONITOR_US 50U
 
 enum { WS_BOOT, WS_IDLE, WS_READY, WS_INSPECTING, WS_COMPLETED, WS_FAULT };
@@ -40,6 +43,7 @@ static inline uint32_t JoinWords(uint16_t high, uint16_t low)
 { return ((uint32_t)high << 16) | low; }
 static inline void SaturatingIncrement(uint32_t *value)
 { if (*value != UINT32_MAX) ++*value; }
+/* 无符号差值允许计时器回绕；调用方须在一个 32 位计时周期内检查期限。 */
 static inline uint32_t Elapsed32(uint32_t now, uint32_t then)
 { return now-then; }
 

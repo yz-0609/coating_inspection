@@ -20,6 +20,7 @@
 #include "main.h"
 #include "app_runtime.h"
 
+/* 空闲任务同样静态分配，避免调度器启动时依赖动态堆。 */
 static StaticTask_t idleTaskControlBlock;
 static StackType_t idleTaskStack[configMINIMAL_STACK_SIZE];
 
@@ -38,6 +39,7 @@ void MX_FREERTOS_Init(void)
 
 void vApplicationStackOverflowHook(TaskHandle_t task, char *name)
 {
+    /* 栈溢出后运行上下文不再可信，立即转入统一致命故障输出路径。 */
     (void)task;
     (void)name;
     Error_Handler();

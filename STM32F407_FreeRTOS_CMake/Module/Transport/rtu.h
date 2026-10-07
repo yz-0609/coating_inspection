@@ -16,8 +16,8 @@ void Rtu_Idle(RtuFrame *frame, uint32_t now, RtuDeliver deliver,
               RtuError error, void *context);
 void Rtu_Invalidate(RtuFrame *frame, uint32_t now);
 
-/* ISR producer / task consumer. Call under the same external IRQ exclusion.
- * Each entry retains the byte completion timestamp. Silence is a distinct record. */
+/* 中断生产、任务消费；调用方须统一排除相关中断，环本身不提供并发锁。
+ * 每条记录保留采集时赋予的字符完成时间戳；静默和错误通过独立记录传递。 */
 #define RX_RING_CAPACITY 1024U
 enum { RX_BYTE, RX_SILENCE, RX_ERROR };
 typedef struct { uint32_t us; uint8_t byte, kind; } RxRecord;

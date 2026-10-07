@@ -25,6 +25,7 @@ void BSP_DebugInit(void)
 }
 bool BSP_DebugWrite(const char *data, size_t length)
 {
+    /* 日志整条入环或整条丢弃，由 TXE 中断异步发送，不等待串口硬件。 */
     bool accepted=false;
     taskENTER_CRITICAL();
     if (length<=DEBUG_TX_SIZE-txCount) {

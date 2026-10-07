@@ -28,7 +28,7 @@ void MX_GPIO_Init(void)
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
 
-    /* Preload inactive ODR before switching any result/DE pin to output. */
+    /* 切换结果/DE 引脚为输出前先写关闭电平，避免初始化瞬间产生有效脉冲。 */
     BSP_BoardSafeOutputs();
 
     config.Pin = BOARD_PRESENT_PIN;

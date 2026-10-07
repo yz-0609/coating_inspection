@@ -11,7 +11,7 @@ uint16_t OutputManager_Commit(uint16_t request, bool gate)
     static uint16_t previous;
     uint16_t applied=OutputPolicy_Resolve(request,gate);
     if (initialized && applied==previous) return applied;
-    /* Break before make. PASS and FAIL never overlap even between GPIO writes. */
+    /* 先关闭 PASS/FAIL 再开启目标输出，连相邻 GPIO 写操作之间也不允许两路重叠。 */
     HAL_GPIO_WritePin(BOARD_PASS_PORT,BOARD_PASS_PIN,BOARD_PASS_INACTIVE);
     HAL_GPIO_WritePin(BOARD_FAIL_PORT,BOARD_FAIL_PIN,BOARD_FAIL_INACTIVE);
     HAL_GPIO_WritePin(BOARD_FAULT_PORT,BOARD_FAULT_PIN,

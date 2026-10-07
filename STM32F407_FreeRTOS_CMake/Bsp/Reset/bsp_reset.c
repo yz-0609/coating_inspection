@@ -13,6 +13,7 @@ static BspResetInfo bootReset;
 
 void BSP_ResetCapture(void)
 {
+    /* 启动最早阶段先保存 RCC 原始标志及协议原因，再清标志供下次复位诊断。 */
     bootReset.raw_csr = RCC->CSR;
     bootReset.reason = ResetReason_Decode(bootReset.raw_csr);
     __HAL_RCC_CLEAR_RESET_FLAGS();

@@ -32,6 +32,7 @@ void MX_FREERTOS_Init(void);
 
 int main(void)
 {
+    /* 保存复位原因后初始化 HAL/时钟，再预置安全 GPIO，最后启动通信、看门狗和任务。 */
     BSP_ResetCapture();
     HAL_Init();
     SystemClock_Config();
@@ -42,6 +43,7 @@ int main(void)
     BSP_WatchdogInit();
 
     MX_FREERTOS_Init();
+    /* 调度器正常情况下不返回；若启动失败，统一进入致命故障输出路径。 */
     vTaskStartScheduler();
     Error_Handler();
 }
@@ -58,6 +60,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  /* 25 MHz HSE / 25 * 336 / 2 = 168 MHz SYSCLK；APB1 42 MHz，APB2 84 MHz。 */
   RCC_OscInitStruct.PLL.PLLM = 25;
   RCC_OscInitStruct.PLL.PLLN = 336;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
@@ -80,7 +83,7 @@ void SystemClock_Config(void)
   }
 }
 
-/* TIM6 supplies the HAL millisecond tick; SysTick belongs to FreeRTOS. */
+/* TIM6 提供 HAL 毫秒时基，SysTick 专供 FreeRTOS，避免两套时基争用。 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM6) {
@@ -90,6 +93,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 void Error_Handler(void)
 {
+    /* 禁止继续执行任务或中断，直接设置安全故障输出；IWDG 已启动时最终触发复位。 */
     __disable_irq();
     BSP_BoardFaultOutputs();
     for (;;) {}

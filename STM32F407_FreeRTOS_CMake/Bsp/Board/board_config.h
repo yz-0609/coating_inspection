@@ -3,16 +3,18 @@
 
 #include "stm32f4xx_hal.h"
 
-/* Candidate wiring only. Confirm the schematic and polarities before connecting loads. */
+/* 当前为候选接线；接负载前须核对原理图与有效电平，确认状态由下方宏记录。 */
 #define BOARD_WIRING_CONFIRMED 0
 #define BOARD_HSE_HZ 25000000UL
 #define BOARD_SYSCLK_HZ 168000000UL
+/* 数值越大优先级越低；调用 FreeRTOS FromISR 的中断统一使用此优先级。 */
 #define BOARD_RTOS_ISR_PRIORITY 6U
 
 #if HSE_VALUE != BOARD_HSE_HZ
 #error Board HSE and HAL HSE_VALUE disagree
 #endif
 
+/* 在位高有效；ACTION/RESET 低有效，按钮输入采用上拉。 */
 #define BOARD_PRESENT_PORT GPIOA
 #define BOARD_PRESENT_PIN GPIO_PIN_0
 #define BOARD_PRESENT_ACTIVE GPIO_PIN_SET
@@ -23,6 +25,7 @@
 #define BOARD_RESET_PIN GPIO_PIN_4
 #define BOARD_RESET_ACTIVE GPIO_PIN_RESET
 
+/* INACTIVE 定义关闭电平；PASS/FAIL 低有效，FAULT 与 RS485 DE 高有效。 */
 #define BOARD_PASS_PORT GPIOB
 #define BOARD_PASS_PIN GPIO_PIN_2
 #define BOARD_PASS_INACTIVE GPIO_PIN_SET
@@ -36,8 +39,8 @@
 #define BOARD_RS485_DE_PIN GPIO_PIN_1
 #define BOARD_RS485_DE_INACTIVE GPIO_PIN_RESET
 
-/* USART1 PA9/PA10; USART2 PA2/PA3.
- * USART2 DMA1 channel 4: RX stream 5, TX stream 6.
- * TIM2 1 MHz and TIM3 50 us RX monitor; TIM6 HAL tick; SysTick FreeRTOS tick. */
+/* 调试串口 USART1：PA9/PA10；RS485 USART2：PA2/PA3。
+ * USART2 使用 DMA1 通道 4：接收 Stream5，发送 Stream6。
+ * TIM2：1 MHz 时间戳；TIM3：50 us 接收监视；TIM6：HAL 时基；SysTick：FreeRTOS 时基。 */
 
 #endif
