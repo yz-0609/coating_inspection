@@ -1,0 +1,14 @@
+{
+  "cmake.sourceDirectory": "${workspaceFolder}/STM32F407_FreeRTOS_CMake",
+  "cmake.useCMakePresets": "always",
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/STM32F407_FreeRTOS_CMake/build/compile_commands.json",
+  "files.associations": {
+    "*.h": "c"
+  },
+  "files.exclude": {
+    "**/__pycache__": true
+  },
+  "search.exclude": {
+    "STM32F407_FreeRTOS_CMake/build/**": true
+  }
+}

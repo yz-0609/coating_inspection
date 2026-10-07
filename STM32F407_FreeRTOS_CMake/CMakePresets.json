@@ -1,0 +1,52 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "debug",
+      "displayName": "STM32F407 Arm GCC",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/arm-none-eabi-gcc.cmake",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "COATING_DEBUG_INJECTION": "OFF"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "MCU delivery (injection disabled)",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/build-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_FLAGS_RELEASE": "-Os -g3",
+        "CMAKE_ASM_FLAGS_RELEASE": "-g3",
+        "COATING_DEBUG_INJECTION": "OFF"
+      }
+    },
+    {
+      "name": "debug-inject",
+      "displayName": "MCU hardware fault injection",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/build-inject",
+      "cacheVariables": {
+        "COATING_DEBUG_INJECTION": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "debug-inject",
+      "configurePreset": "debug-inject"
+    }
+  ]
+}

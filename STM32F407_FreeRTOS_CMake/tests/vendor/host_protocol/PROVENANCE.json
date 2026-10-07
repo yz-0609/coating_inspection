@@ -1,0 +1,15 @@
+{
+  "repository": "https://github.com/yz-0609/coating_inspection_host",
+  "commit": "aab161d065bab147a8894b28832d413973821423",
+  "purpose": "Unmodified upstream encode/decode/command_satisfied for MCU contract tests",
+  "files": [
+    {
+      "path": "include/inspection/protocol.hpp",
+      "sha256": "44c2970a9ba40f30456fab914945a740c110b1bfac8126f1ace1c6a4db0bcca1"
+    },
+    {
+      "path": "src/workstation/protocol.cpp",
+      "sha256": "d3d3124e1d46e5530d127b713f5679695bd1e4e3285d6741a22d865d2ee1695d"
+    }
+  ]
+}

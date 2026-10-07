@@ -1,0 +1,2 @@
+# Preserve source bytes and vendor checksums across Windows and Linux checkouts.
+* -text

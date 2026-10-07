@@ -1,0 +1,309 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "MCU: 检查构建环境",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "check_build_env.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 配置 CMake",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--preset",
+        "debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 编译",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "--preset",
+        "debug",
+        "--parallel"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 配置 CMake",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "MCU: 全量重新编译",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "--preset",
+        "debug",
+        "--clean-first",
+        "--parallel"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 配置 CMake",
+      "group": "build",
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "MCU: 清理构建产物",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "--preset",
+        "debug",
+        "--target",
+        "clean"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 配置 CMake",
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 查看固件大小",
+      "type": "process",
+      "command": "arm-none-eabi-size",
+      "args": [
+        "build/STM32F407.elf"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 编译",
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 烧录 ST-Link (SWD)",
+      "type": "process",
+      "command": "openocd",
+      "args": [
+        "-f",
+        "interface/stlink.cfg",
+        "-c",
+        "transport select hla_swd",
+        "-f",
+        "target/stm32f4x.cfg",
+        "-c",
+        "adapter speed 1000",
+        "-c",
+        "program {build-release/STM32F407.elf} verify reset exit"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 编译交付版",
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 烧录 CMSIS-DAP (SWD)",
+      "type": "process",
+      "command": "openocd",
+      "args": [
+        "-f",
+        "interface/cmsis-dap.cfg",
+        "-c",
+        "transport select swd",
+        "-f",
+        "target/stm32f4x.cfg",
+        "-c",
+        "adapter speed 1000",
+        "-c",
+        "program {build-release/STM32F407.elf} verify reset exit"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 编译交付版",
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 配置主机测试",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "-S",
+        "tests",
+        "-B",
+        "build-host",
+        "-G",
+        "Ninja",
+        "-DCMAKE_C_COMPILER=gcc",
+        "-DCMAKE_CXX_COMPILER=g++"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 编译主机测试",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "build-host",
+        "--parallel"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 配置主机测试",
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "MCU: 主机测试",
+      "type": "process",
+      "command": "ctest",
+      "args": [
+        "--test-dir",
+        "build-host",
+        "--output-on-failure"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 编译主机测试",
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 当前固件检查",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "tools/validate_firmware.py",
+        "--build-dir",
+        "build"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": [
+        "MCU: 编译",
+        "MCU: 主机测试"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 配置交付版",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--preset",
+        "release"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 编译交付版",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "--preset",
+        "release",
+        "--parallel"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 配置交付版",
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "MCU: 配置故障注入版",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--preset",
+        "debug-inject"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 编译故障注入版",
+      "type": "process",
+      "command": "cmake",
+      "args": [
+        "--build",
+        "--preset",
+        "debug-inject",
+        "--parallel"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 配置故障注入版",
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "MCU: 离线回放",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "tools/offline_replay.py",
+        "--emulator",
+        "build-host/mcu_emulator.exe",
+        "--output",
+        "build-host/offline-replay.json"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "dependsOn": "MCU: 编译主机测试",
+      "problemMatcher": []
+    },
+    {
+      "label": "MCU: 离线全量验证与交付",
+      "type": "process",
+      "command": "python",
+      "args": [
+        "tools/validate_project.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    }
+  ]
+}

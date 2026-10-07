@@ -1,0 +1,22 @@
+set(PURE_ROOT "${CMAKE_CURRENT_LIST_DIR}/..")
+set(PURE_MODULE_SOURCES
+    "${PURE_ROOT}/Module/Diagnostics/reset_reason.c"
+    "${PURE_ROOT}/Module/Diagnostics/diagnostics.c"
+    "${PURE_ROOT}/Module/Protocol/protocol.c"
+    "${PURE_ROOT}/Module/Protocol/modbus.c"
+    "${PURE_ROOT}/Module/Transport/rtu.c"
+    "${PURE_ROOT}/Module/Transport/dma_cursor.c"
+    "${PURE_ROOT}/Module/Health/health.c"
+    "${PURE_ROOT}/Device/DigitalInput/debounce.c"
+    "${PURE_ROOT}/Device/Output/output_policy.c"
+    "${PURE_ROOT}/Application/Workstation/workstation.c"
+)
+set(PURE_MODULE_INCLUDES
+    "${PURE_ROOT}/Module/Diagnostics"
+    "${PURE_ROOT}/Module/Protocol"
+    "${PURE_ROOT}/Module/Transport"
+    "${PURE_ROOT}/Module/Health"
+    "${PURE_ROOT}/Device/DigitalInput"
+    "${PURE_ROOT}/Device/Output"
+    "${PURE_ROOT}/Application/Workstation"
+)
