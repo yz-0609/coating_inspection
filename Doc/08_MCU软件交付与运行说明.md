@@ -4,7 +4,7 @@
 
 ## 交付和一键检查
 
-工程：`STM32F407_FreeRTOS_CMake`。在该目录执行 `python tools/validate_project.py`，完成三个固件变体全量构建、原生 C/C++ 测试、虚拟回放、依赖与固件校验、打包。VS Code 使用外层工作区，任务“MCU: 离线全量验证与交付”运行同一流程。
+工程：`coating_inspection_mcu`。在该目录执行 `python tools/validate_project.py`，完成三个固件变体全量构建、原生 C/C++ 测试、虚拟回放、依赖与固件校验、打包。VS Code 使用外层工作区，任务“MCU: 离线全量验证与交付”运行同一流程。
 
 | 交付项 | 位置 |
 |---|---|

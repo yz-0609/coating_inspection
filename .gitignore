@@ -1,0 +1,49 @@
+# CMake 构建目录与本机配置
+build*/
+delivery/
+CMakeFiles/
+CMakeCache.txt
+CMakeUserPresets.json
+compile_commands.json
+Testing/
+.ninja_deps
+.ninja_log
+
+# 编译和固件产物
+*.o
+*.obj
+*.a
+*.lib
+*.elf
+*.bin
+*.hex
+*.map
+*.exe
+
+# Python 缓存与虚拟环境
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# 本机环境参数；保留可公开的配置模板
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+
+# 编辑器、系统及临时文件；.vscode 工作区配置继续纳入版本管理
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+*~

@@ -1,6 +1,6 @@
 # 编译、测试与烧录
 
-所有以下命令在 `STM32F407_FreeRTOS_CMake` 目录运行。本机已验证 CMake 3.28.1、Ninja 1.11.1、Arm GCC 12.2.0、原生 GCC / G++ 13.2.0、Python 3.11.7、OpenOCD 0.12.0。
+所有以下命令在 Git 仓库根目录下的代码子目录 `coating_inspection_mcu/` 运行。本机已验证 CMake 3.28.1、Ninja 1.11.1、Arm GCC 12.2.0、原生 GCC / G++ 13.2.0、Python 3.11.7、OpenOCD 0.12.0。
 
 ## 预设
 

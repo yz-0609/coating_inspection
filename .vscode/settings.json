@@ -1,7 +1,7 @@
 {
-  "cmake.sourceDirectory": "${workspaceFolder}/STM32F407_FreeRTOS_CMake",
+  "cmake.sourceDirectory": "${workspaceFolder}/coating_inspection_mcu",
   "cmake.useCMakePresets": "always",
-  "C_Cpp.default.compileCommands": "${workspaceFolder}/STM32F407_FreeRTOS_CMake/build/compile_commands.json",
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/coating_inspection_mcu/build/compile_commands.json",
   "files.associations": {
     "*.h": "c"
   },
@@ -9,6 +9,6 @@
     "**/__pycache__": true
   },
   "search.exclude": {
-    "STM32F407_FreeRTOS_CMake/build/**": true
+    "coating_inspection_mcu/build/**": true
   }
 }

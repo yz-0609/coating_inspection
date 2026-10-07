@@ -9,7 +9,7 @@
         "check_build_env.py"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "problemMatcher": []
     },
@@ -22,7 +22,7 @@
         "debug"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "problemMatcher": []
     },
@@ -37,7 +37,7 @@
         "--parallel"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 配置 CMake",
       "group": {
@@ -60,7 +60,7 @@
         "--parallel"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 配置 CMake",
       "group": "build",
@@ -80,7 +80,7 @@
         "clean"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 配置 CMake",
       "problemMatcher": []
@@ -93,7 +93,7 @@
         "build/STM32F407.elf"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 编译",
       "problemMatcher": []
@@ -115,7 +115,7 @@
         "program {build-release/STM32F407.elf} verify reset exit"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 编译交付版",
       "problemMatcher": []
@@ -137,7 +137,7 @@
         "program {build-release/STM32F407.elf} verify reset exit"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 编译交付版",
       "problemMatcher": []
@@ -157,7 +157,7 @@
         "-DCMAKE_CXX_COMPILER=g++"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "problemMatcher": []
     },
@@ -171,7 +171,7 @@
         "--parallel"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 配置主机测试",
       "problemMatcher": [
@@ -188,7 +188,7 @@
         "--output-on-failure"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 编译主机测试",
       "problemMatcher": []
@@ -203,7 +203,7 @@
         "build"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": [
         "MCU: 编译",
@@ -221,7 +221,7 @@
         "release"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "problemMatcher": []
     },
@@ -236,7 +236,7 @@
         "--parallel"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 配置交付版",
       "problemMatcher": [
@@ -252,7 +252,7 @@
         "debug-inject"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "problemMatcher": []
     },
@@ -267,7 +267,7 @@
         "--parallel"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 配置故障注入版",
       "problemMatcher": [
@@ -286,7 +286,7 @@
         "build-host/offline-replay.json"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "dependsOn": "MCU: 编译主机测试",
       "problemMatcher": []
@@ -299,7 +299,7 @@
         "tools/validate_project.py"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/STM32F407_FreeRTOS_CMake"
+        "cwd": "${workspaceFolder}/coating_inspection_mcu"
       },
       "problemMatcher": [
         "$gcc"

@@ -116,7 +116,7 @@ def main():
                                  and d not in ("delivery", ".git", "__pycache__")]
             for filename in sorted(filenames):
                 path = pathlib.Path(directory) / filename
-                package.write(path, arcname="coating_inspection_mcu/STM32F407_FreeRTOS_CMake/" +
+                package.write(path, arcname="coating_inspection_mcu/coating_inspection_mcu/" +
                               path.relative_to(root).as_posix())
         for directory in (root.parent / "Doc", root.parent / ".vscode"):
             for path in sorted(directory.rglob("*")):
