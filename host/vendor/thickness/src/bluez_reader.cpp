@@ -77,7 +77,7 @@ public:
         has_run_ = true;
 
         GError* error = nullptr;
-        // BlueZ 在系统总线上服务；初始化失败报告 GError 并返回 1，不能继续假装在线。
+        // BlueZ 在系统总线上服务；初始化失败报告 GError 并返回 1，停止本次连接初始化。
         bus_ = g_bus_get_sync(G_BUS_TYPE_SYSTEM, nullptr, &error);
         if (bus_ == nullptr) {
             report_gerror("无法连接系统 D-Bus", error);

@@ -1,0 +1,66 @@
+name: Build and Test
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  host:
+    name: Linux host
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake pkg-config libglib2.0-dev \
+            libsqlite3-dev libyaml-cpp-dev libmodbus-dev nlohmann-json3-dev python3
+      - name: Configure and build
+        run: |
+          cmake -S host -B host/build -DCMAKE_BUILD_TYPE=Debug
+          cmake --build host/build --parallel 4
+      - name: Run tests
+        run: ctest --test-dir host/build --output-on-failure --output-junit test-results.xml
+      - name: Run inspection demos
+        working-directory: host
+        run: |
+          python3 tools/demo.py --binary build/inspection_service --output reports/demo-pass
+          python3 tools/demo.py --binary build/inspection_service --result fail --output reports/demo-fail
+          python3 tools/demo.py --binary build/inspection_service --result aborted --output reports/demo-aborted
+      - name: Save test results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: host-test-results
+          path: |
+            host/build/test-results.xml
+            host/reports/
+
+  mcu:
+    name: MCU firmware and protocol contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install toolchains
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcc g++ python3 \
+            gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi
+      - name: Build, test and validate firmware
+        working-directory: mcu
+        run: python3 tools/validate_project.py
+      - name: Save validation and firmware
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mcu-validation-and-firmware
+          path: |
+            mcu/build-validation/
+            mcu/build-release/firmware-validation.json
+            mcu/delivery/

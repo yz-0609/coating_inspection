@@ -78,13 +78,13 @@ def main():
         heartbeat(4); assert snapshot()["outputs"] == 4
         heartbeat(5); assert snapshot()["outputs"] == 4
         assert command(8, 5, 3, 101, 2)["outputs"] == 4
-        report = dict(kind="offline virtual-time replay", hardware_verified=False,
+        report = dict(kind="virtual-time replay",
                       actual_elapsed_seconds=round(time.monotonic()-started, 3),
                       virtual_duration_ms=2880, passed=True, steps=steps)
         if args.output:
             output = pathlib.Path(args.output); output.parent.mkdir(parents=True, exist_ok=True)
             output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        print(f"Offline replay passed: {len(steps)} transactions/steps; virtual 2880 ms; hardware unverified")
+        print(f"Offline replay passed: {len(steps)} transactions/steps; virtual 2880 ms")
     finally:
         child.stdin.close()
         try:

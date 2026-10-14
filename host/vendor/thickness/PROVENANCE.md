@@ -1,15 +1,14 @@
-# BLE 依赖来源与本项目改动
+# BLE 组件来源与适配
 
-来源：https://github.com/yz-0609/Thickness_bluetooth_protocol
-固定提交：7db6610bd7cdd23348475f12dbd8ee7846105f4f
+来源：[Thickness_bluetooth_protocol](https://github.com/yz-0609/Thickness_bluetooth_protocol)
 
-保留include/src及上游README。构建目标在本工程定义，不修改工作区外的原仓库。
-上游接口新增Measurement::milli_um（int64_t），从已解码的符号-幅值直接得到千分之一微米整数；
-原double micrometers接口保持兼容，厂商CRC和大小解释保持原语义。
-ReaderCallbacks新增diagnostic结构化计数回调；适配层累计CRC/格式错误，不从日志字符串反解析。
+固定提交：`7db6610bd7cdd23348475f12dbd8ee7846105f4f`。
 
-本项目InstrumentEvents在适配层补充接收时间、连接代次、本地序号、候选编号。
-BluezReader已有断连reset协议半帧，回放后端在连接变化时也执行reset。
-上游已验证样例用于解析回归，不意味着本项目进行了新的实机测量。
+本工程保留组件的 `include/` 与 `src/`，由上位机 CMake 定义构建目标。
 
-上游代码仍保留原注释，新增适配模块提供中文说明。后续更换或修复依赖需更新此文件并执行解析回归。
+- `Measurement::milli_um` 以整数表示千分之一微米厚度，由解码后的符号与幅值换算；保留 `micrometers` 接口。
+- `ReaderCallbacks` 增加结构化 `diagnostic` 回调，适配层累计 CRC 与格式错误计数。
+- 上位机适配层补充接收时间、连接代次、本地序号和候选编号。
+- 连接变化时清除协议半帧，防止跨连接组帧。
+
+协议解析回归用例位于 `host/tests/unit.cpp`。更新组件时同步维护来源记录，并执行上位机测试。

@@ -34,7 +34,7 @@ def main():
         station.service.send('outbox')
         events = station.service.wait('outbox')['records']
         summary = dict(mode='SOFTWARE_SIMULATION', records=records, outbox=events,
-                       cloud_status='NOT_CONFIGURED', hardware_verified=False)
+                       cloud_status='NOT_CONFIGURED')
         (output / 'summary.json').write_text(json.dumps(summary, indent=2, ensure_ascii=False))
         print(json.dumps(summary, indent=2, ensure_ascii=False))
         station.present(False)

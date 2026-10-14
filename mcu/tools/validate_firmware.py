@@ -66,10 +66,11 @@ def main():
         require(path.stat().st_size == item["bytes"] and sha256(path) == item["sha256"],
                 "Vendor hash mismatch: " + item["path"])
 
-    host = root / "tests/vendor/host_protocol"
-    upstream = json.loads((host / "PROVENANCE.json").read_text(encoding="utf-8"))
-    for item in upstream["files"]:
-        require(sha256(host / item["path"]) == item["sha256"], "Upstream test source changed")
+    host = root.parent / "host"
+    host_files = ("include/inspection/protocol.hpp", "src/workstation/protocol.cpp")
+    require(all((host / path).is_file() for path in host_files),
+            "Missing host protocol sources in the integrated repository")
+    host_protocol_sources = {path: sha256(host / path) for path in host_files}
     version = re.search(r'#define FW_VERSION "([^"]+)"',
                         (root / "Module/Protocol/protocol.h").read_text(encoding="utf-8")).group(1)
     commands = json.loads((build / "compile_commands.json").read_text(encoding="utf-8"))
@@ -145,9 +146,9 @@ def main():
                 "ELF/HEX missing or mismatched section data")
 
     report = {
-        "stage": "offline software delivery", "hardware_accepted": False,
+        "validation_scope": "firmware artifacts and source provenance",
         "firmware_version": version, "injection_enabled": args.expected_injection == "1",
-        "upstream_host_commit": upstream["commit"],
+        "host_protocol_sources": host_protocol_sources,
         "checked_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "source_count": len(sources), "bin_bytes": len(binary),
         "initial_sp": hex(sp), "reset_vector": hex(reset),

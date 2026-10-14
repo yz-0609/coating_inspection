@@ -1,0 +1,2 @@
+# Preserve source and vendor bytes across Windows and Linux checkouts.
+* -text whitespace=cr-at-eol

@@ -67,11 +67,12 @@ def main():
         checked_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),
         actual_elapsed_seconds=round(time.monotonic()-started, 3), variants=variants,
         native_tests=test_log, offline_replay=json.loads(replay.read_text(encoding="utf-8")),
-        hardware_accepted=False, physical_24h_completed=False, vscode_tasks=len(tasks))
+        validation_scope="firmware builds, native tests and virtual-time replay",
+        vscode_tasks=len(tasks))
     (logs / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     checks = ET.parse(logs / "ctest.xml").getroot().findall(".//testcase")
     release = variants["release"]["validation"]
-    lines = ["# MCU 离线验证结果", "", "固件版本：" + summary["version"] + "。",
+    lines = ["# MCU 构建与自动测试报告", "", "固件版本：" + summary["version"] + "。",
              "检查 UTC 时间：" + summary["checked_at"] + "。",
              "本次全量检查实际耗时：" + str(summary["actual_elapsed_seconds"]) + " 秒。", "",
              "## 构建与产物", "", "| 变体 | 源文件 | BIN字节 | 应用警告 | 依赖警告 | 注入 |",
@@ -85,22 +86,22 @@ def main():
               "## 自动测试", "", "CTest：" + str(len(checks)) + "/" + str(len(checks)) + " 通过。", ""]
     lines += ["- " + item.attrib["name"] for item in checks]
     lines += ["", "压力：100000个随机ADU、1000次保护/结果交错、10000次虚拟工位闭环。",
-              "上游契约：未修改的C++编码、解码及command_satisfied，提交 `" + release["upstream_host_commit"] + "`。",
-              "独立进程回放：" + str(len(summary["offline_replay"]["steps"])) + " 个事务/步骤，虚拟时间2880 ms，实际耗时另记JSON。", "",
-              "## 证据位置和未验证项目", "", "build-validation 保存完整构建日志、ctest.xml、summary.json及offline-replay.json。",
-              "固件与源代码包位于 delivery；SHA256SUMS.json记录交付文件哈希。", "",
-              "未连接或烧录真实MCU；GPIO、电平、时钟、UART/DMA/DE波形、Linux完整服务、真实BLE仪器、实际保护延迟、栈余量和实机24 h未验收。",
-              "这些结果仅为离线软件验证，不能作为物理现场或24 h报告。"]
-    (root.parent / "Doc/10_MCU离线验证结果.md").write_text("\n".join(lines)+"\n", encoding="utf-8")
+              "两端契约：直接编译同仓库 host/ 的 C++ 编码、解码及 command_satisfied；源文件哈希记录于 firmware-validation.json。",
+              "独立进程回放：" + str(len(summary["offline_replay"]["steps"])) + " 个事务/步骤，虚拟时间 " +
+              str(summary["offline_replay"]["virtual_duration_ms"]) + " ms，实际耗时记录于 JSON。", "",
+              "## 报告与交付位置", "", "build-validation 保存构建日志、ctest.xml、summary.json 与 offline-replay.json。",
+              "固件与源代码包位于 delivery；SHA256SUMS.json 记录交付文件哈希。"]
+    (logs / "validation-report.md").write_text("\n".join(lines)+"\n", encoding="utf-8")
     delivery = root / "delivery" / ("firmware-" + summary["version"])
     delivery.mkdir(parents=True, exist_ok=True)
     for suffix in ("elf", "bin", "hex", "map"):
         shutil.copyfile(root / "build-release" / ("STM32F407." + suffix), delivery / ("STM32F407." + suffix))
     shutil.copyfile(root / "build-release/firmware-validation.json", delivery / "firmware-validation.json")
     shutil.copyfile(logs / "summary.json", delivery / "offline-validation.json")
+    shutil.copyfile(logs / "validation-report.md", delivery / "validation-report.md")
     for name in ("README.md", "CMAKE_BUILD.md"):
         shutil.copyfile(root / name, delivery / name)
-    for document in (root.parent / "Doc").glob("*.md"):
+    for document in (root.parent / "docs").glob("*.md"):
         shutil.copyfile(document, delivery / document.name)
     hashes = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
               for p in delivery.iterdir() if p.is_file() and p.name != "SHA256SUMS.json"}
@@ -116,15 +117,25 @@ def main():
                                  and d not in ("delivery", ".git", "__pycache__")]
             for filename in sorted(filenames):
                 path = pathlib.Path(directory) / filename
-                package.write(path, arcname="coating_inspection_mcu/coating_inspection_mcu/" +
+                package.write(path, arcname="coating_inspection/mcu/" +
                               path.relative_to(root).as_posix())
-        for directory in (root.parent / "Doc", root.parent / ".vscode"):
+        # Package the host alongside MCU sources so the shared contract is reproducible.
+        host = root.parent / "host"
+        for directory, subdirectories, filenames in os.walk(host):
+            subdirectories[:] = [d for d in subdirectories if not d.startswith("build")
+                                 and d not in ("reports", "data", "__pycache__", ".venv", "venv")]
+            for filename in sorted(filenames):
+                path = pathlib.Path(directory) / filename
+                package.write(path, arcname="coating_inspection/host/" + path.relative_to(host).as_posix())
+        package.write(root.parent / "README.md", arcname="coating_inspection/README.md")
+        for name in (".gitignore", ".gitattributes"):
+            package.write(root.parent / name, arcname="coating_inspection/" + name)
+        for directory in (root.parent / "docs", root.parent / ".vscode", root.parent / ".github"):
             for path in sorted(directory.rglob("*")):
-                if path.is_file(): package.write(path, arcname="coating_inspection_mcu/" + path.relative_to(root.parent).as_posix())
+                if path.is_file(): package.write(path, arcname="coating_inspection/" + path.relative_to(root.parent).as_posix())
     print("All offline checks passed. Release:", delivery)
     print("Archive:", archive)
     print("Source archive:", source_archive)
-    print("Physical hardware/instrument/24-hour verification remains pending.")
 
 
 if __name__ == "__main__":

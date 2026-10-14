@@ -1,0 +1,14 @@
+{
+  "cmake.sourceDirectory": [
+    "${workspaceFolder}/host",
+    "${workspaceFolder}/mcu"
+  ],
+  "cmake.configureOnOpen": false,
+  "files.exclude": {
+    "**/__pycache__": true
+  },
+  "search.exclude": {
+    "**/build*/**": true,
+    "**/delivery/**": true
+  }
+}

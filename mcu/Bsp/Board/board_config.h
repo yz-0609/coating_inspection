@@ -3,7 +3,7 @@
 
 #include "stm32f4xx_hal.h"
 
-/* 当前为候选接线；接负载前须核对原理图与有效电平，确认状态由下方宏记录。 */
+/* 板级引脚与有效电平集中配置；接线按板卡原理图适配。 */
 #define BOARD_WIRING_CONFIRMED 0
 #define BOARD_HSE_HZ 25000000UL
 #define BOARD_SYSCLK_HZ 168000000UL

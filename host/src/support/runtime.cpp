@@ -30,9 +30,9 @@ std::string uuid() {
     g_free(value);
     return result;
 }
-// 记录系统是否存在同步证据；UNVERIFIED 仍允许存储，但追溯者应知晓时间未验证。
+// 记录系统时钟的同步状态，供检测记录追溯。
 std::string time_quality() {
-    // systemd-timesyncd 创建此标志表示已同步；缺少证据时保守标记未验证。
+    // 读取 systemd-timesyncd 同步标志，分别返回 SYNCHRONIZED 或 UNVERIFIED。
     std::ifstream synchronized("/run/systemd/timesync/synchronized");
     return synchronized.good() ? "SYNCHRONIZED" : "UNVERIFIED";
 }

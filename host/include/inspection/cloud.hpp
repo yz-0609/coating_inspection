@@ -3,7 +3,7 @@
  *
  * 职责说明：预留提交和平台回复契约，当前使用明确返回未配置状态的适配器。
  * 调用关系：业务展示 cloud 状态；检测完成事件先保存在本地 Outbox。
- * 阅读提示：提交成功不等于平台接受；当前实现不会假装上传成功。
+ * 阅读提示：提交状态与平台回复分别建模，默认适配器保留本地事件。
  */
 #pragma once
 #include "inspection/support.hpp"
@@ -29,7 +29,7 @@ class ICloudPublisher {
                                       std::function<void(CloudReply)> reply) = 0;
     virtual void stop() = 0;
 };
-// 模块三：本期默认实现。状态恒为 NOT_CONFIGURED，publish 不发送请求。
+// 模块三：默认本地运行适配器。状态恒为 NOT_CONFIGURED，publish 不发送请求。
 class DisabledCloudPublisher final : public ICloudPublisher {
   public:
     std::string status() const override {
