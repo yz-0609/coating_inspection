@@ -1,0 +1,30 @@
+{
+  "repository": "https://github.com/STMicroelectronics/stm32f4xx-hal-driver",
+  "tag": "v1.8.2",
+  "files": [
+    {
+      "path": "Inc/stm32f4xx_hal_uart.h",
+      "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx-hal-driver/v1.8.2/Inc/stm32f4xx_hal_uart.h",
+      "bytes": 45527,
+      "sha256": "42528bc9caa6e2fe96b7e6d7b3fcdf35d8d85ae38d33195a233e18a072f157a1"
+    },
+    {
+      "path": "Src/stm32f4xx_hal_uart.c",
+      "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx-hal-driver/v1.8.2/Src/stm32f4xx_hal_uart.c",
+      "bytes": 135653,
+      "sha256": "581f14026cba4ad2e4322376bfa6d626e55c83b2981ed2117d0ccdffa904ca23"
+    },
+    {
+      "path": "Inc/stm32f4xx_hal_iwdg.h",
+      "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx-hal-driver/v1.8.2/Inc/stm32f4xx_hal_iwdg.h",
+      "bytes": 6607,
+      "sha256": "5a0259ec13549adf9a21224c7698b14479b777ec95a3996b4527f2abb295d484"
+    },
+    {
+      "path": "Src/stm32f4xx_hal_iwdg.c",
+      "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32f4xx-hal-driver/v1.8.2/Src/stm32f4xx_hal_iwdg.c",
+      "bytes": 9663,
+      "sha256": "98b792938f989c9c92dcb6b156a0a8ee8dfc553ef907b4a87a7f44867bc52343"
+    }
+  ]
+}
