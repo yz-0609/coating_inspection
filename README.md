@@ -2,6 +2,8 @@
 
 **上下位机独立仓库：** [Linux 上位机](https://github.com/yz-0609/coating_inspection_host) · [STM32 下位机](https://github.com/yz-0609/coating_inspection_mcu)
 
+[![Build and Test](https://github.com/yz-0609/coating_inspection/actions/workflows/ci.yml/badge.svg)](https://github.com/yz-0609/coating_inspection/actions/workflows/ci.yml)
+
 基于 **Linux / C++17 + STM32F407 / FreeRTOS** 的涂层厚度检测系统，通过 BLE 接入测厚仪，通过 RS485 / Modbus RTU 协同现场工位，将工件识别、多点采集、人工确认、质量判定、结果指示与数据追溯串联为完整的检测流程。
 
 本仓库统一维护上下位机代码、通信协议和自动测试。`host/` 负责检测业务与数据管理，`mcu/` 负责现场输入输出与工位控制，两端保留独立构建入口。
